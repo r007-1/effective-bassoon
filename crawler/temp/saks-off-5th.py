@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup as bs
 from lxml import etree
 import requests
 import scrapy
-from crawler.items import crawler
+from crawler.items import CrawlerItem
 import time
 import random
 import datetime

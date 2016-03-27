@@ -22,14 +22,16 @@ class Asos(scrapy.Spider):
             prod_link = tag.findNext("loc").text
             if '?iid=' in prod_link:
                 start_urls.append(prod_link[0:prod_link.find("&mporgp")])
-    start_urls = start_urls[0:10]
     def parse(self, response):
         datetime = int(str(int(time.time()*100))) #Don't change!
         random.seed(1412112 + datetime) #Don't change!
         item = CrawlerItem() #Don't change!
         item['prod_id'] = str(datetime) + str(int(random.uniform(100000, 999999))) #Don't change!
         item['affiliate_partner'] = "viglink"
-        item['brand'] = response.selector.xpath('//div[@id = "productTabs"]/div[@id="ctl00_ContentMainPage_brandInfoPanel"]/a[1]/strong/text()').extract()[0]
+        try:
+            item['brand'] = response.selector.xpath('//div[@id = "productTabs"]/div[@id="ctl00_ContentMainPage_brandInfoPanel"]/a[1]/strong/text()').extract()[0]
+        except IndexError:
+            item['brand'] = response.selector.xpath('//div[@class="title"]/h1/span[@class="product_title"]/text()').extract()[0]
         item['long_desc'] = " | ".join(response.selector.xpath('//div[@id="ctl00_ContentMainPage_productInfoPanel"]/ul/li/text()').extract())
         item['short_desc'] = response.selector.xpath('//div[@class="title"]/h1/span[@class="product_title"]/text()').extract()[0]
         item['product_link'] = response.selector.xpath('//head/link[@rel="canonical"]/@href').extract()[0]
