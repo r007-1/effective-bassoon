@@ -22,13 +22,13 @@ class Asos(scrapy.Spider):
             prod_link = tag.findNext("loc").text
             if '?iid=' in prod_link:
                 start_urls.append(prod_link[0:prod_link.find("&mporgp")])
-    start_urls = start_urls[0:10]
     def parse(self, response):
         try:
             datetime = int(str(int(time.time()*100))) #Don't change!
             random.seed(1412112 + datetime) #Don't change!
             item = CrawlerItem() #Don't change!
             item['prod_id'] = str(datetime) + str(int(random.uniform(100000, 999999))) #Don't change!
+            item['prod_id'] = int(item['prod_id'])
             item['affiliate_partner'] = "viglink"
             try:
                 item['brand'] = response.selector.xpath('//div[@id = "productTabs"]/div[@id="ctl00_ContentMainPage_brandInfoPanel"]/a[1]/strong/text()').extract()[0]

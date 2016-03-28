@@ -28,7 +28,7 @@ class TheOutnet(scrapy.Spider):
 
             item = CrawlerItem() #Don't change!
             item['prod_id'] = str(datetime) + str(int(random.uniform(100000, 999999))) #Don't change!
-
+            item['prod_id'] = int(item['prod_id'])
             item['affiliate_partner'] = "viglink"
             item['brand'] = response.selector.xpath('//div[@id="product-heading"]/h1/a/text()').extract()[0]
             item['long_desc'] = " | ".join(response.selector.xpath('//li[@id="details-section"]/ul/li/div[@class="tab-details translateSection"]/ul[1]/li/text()').extract())
@@ -91,7 +91,7 @@ class TheOutnet(scrapy.Spider):
             item['merchant_id']  = "5BIJ2J"
             item['merchant_prod_id'] = response.selector.xpath('//li[@id="details-section"]/ul/li/div[@class="tab-details translateSection"]/p[last()]/text()').extract()[0][-6:]
 
-            item['is_available'] = 'True' #BOOLEAN
+            item['is_available'] = 1 #BOOLEAN
             item['currency'] = response.selector.xpath('//div[@id="product-info"]/@data-currency').extract()[0]
             item['currency_symbol'] = response.selector.xpath('//div[@class="prices-all"]/div[@itemprop="offers"]/span[@itemprop="price"]/text()').extract()[0][0]
 
@@ -103,20 +103,20 @@ class TheOutnet(scrapy.Spider):
                     item['price_sale'] = sale
                     item['price_perc_discount'] = int(100-100*(sale/orig))
                     item['price'] = item['price_sale']
-                    item['on_sale'] = 'True' #BOOLEAN
+                    item['on_sale'] = 1 #BOOLEAN
                 else:
                     item['price_orig'] = int(float(response.selector.xpath('//div[@class="prices-all"]/div[@itemprop="offers"]/span[@itemprop="price"]/text()').extract()[0][1:]))
                     item['price'] = item['price_orig']
                     item['price_sale'] = ""
-                    item['on_sale'] = 'False'
+                    item['on_sale'] = 0
             except IndexError:
                 item['price_orig'] = int(float(response.selector.xpath('//div[@class="prices-all"]/div[@itemprop="offers"]/span[@itemprop="price"]/text()').extract()[0][1:]))
                 item['price'] = item['price_orig']
                 item['price_sale'] = ""
-                item['on_sale'] = 'False' #BOOLEAN
+                item['on_sale'] = 0 #BOOLEAN
 
             item['primary_color'] = ""
-            tags = [str(item['brand']), str(item['short_desc']), str(item['long_desc'])] #str(" ".join(item['mcats'])),
+            tags = [unicode(item['brand']), unicode(item['short_desc']), unicode(item['long_desc'])] #str(" ".join(item['mcats'])),
             item['tags'] = " ".join(tags)
             yield item
         except IndexError as e:

@@ -31,7 +31,7 @@ class SaksOff5th(scrapy.Spider):
 
             item = CrawlerItem() #Don't change!
             item['prod_id'] = unicode(datetime) + unicode(int(random.uniform(100000, 999999))) #Don't change!
-
+            item['prod_id'] = int(item['prod_id'])
             item['affiliate_partner'] = "viglink"
             item['brand'] = "Saks Off 5th"
             item['long_desc'] = " | ".join(response.selector.xpath('//div[@itemprop="description"]/ul/li/text()').extract())
@@ -94,7 +94,7 @@ class SaksOff5th(scrapy.Spider):
             item['merchant_id']  = "E78883"
             item['merchant_prod_id'] = response.selector.xpath('//div[@id="js-product-number"]/@data-master-sku').extract()[0]
 
-            item['is_available'] = 'True' #BOOLEAN
+            item['is_available'] = 1
             item['currency'] = "USD"
             item['currency_symbol'] = "$"
 
@@ -106,17 +106,17 @@ class SaksOff5th(scrapy.Spider):
                     item['price_sale'] = sale
                     item['price_perc_discount'] = int(100-100*(sale/orig))
                     item['price'] = item['price_sale']
-                    item['on_sale'] = 'True' #BOOLEAN
+                    item['on_sale'] = 1
                 else:
                     item['price_orig'] = int(float(response.selector.xpath('//span[@class="o5-price-standard"]/text()').extract()[0][1:]))
                     item['price'] = item['price_orig']
                     item['price_sale'] = ""
-                    item['on_sale'] = 'False'
+                    item['on_sale'] = 0
             except IndexError:
                 item['price_orig'] = int(float(response.selector.xpath('//span[@class="o5-price-standard"]/text()').extract()[0][1:]))
                 item['price'] = item['price_orig']
                 item['price_sale'] = ""
-                item['on_sale'] = 'False' #BOOLEAN
+                item['on_sale'] = 0 #BOOLEAN
 
             item['primary_color'] = ""
             tags = [unicode(item['brand']), unicode(item['short_desc']), unicode(item['long_desc'])] #str(" ".join(item['mcats'])),

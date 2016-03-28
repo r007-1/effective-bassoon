@@ -30,10 +30,9 @@ class Revolve(scrapy.Spider):
         try:
             datetime = int(str(int(time.time()*100))) #Don't change!
             random.seed(1412112 + datetime) #Don't change!
-
             item = CrawlerItem() #Don't change!
             item['prod_id'] = str(datetime) + str(int(random.uniform(100000, 999999))) #Don't change!
-
+            item['prod_id'] = int(item['prod_id'])
             item['affiliate_partner'] = "viglink"
             item['brand'] = "REVOLVE"
             item['long_desc'] = " | ".join(response.selector.xpath('//div[@class="product-details__content js-tabs__content js-tabs__content-active product-details__description"]/ul/li/text()').extract())

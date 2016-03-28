@@ -26,11 +26,11 @@ class Harrods(scrapy.Spider):
 
             item = CrawlerItem() #Don't change!
             item['prod_id'] = unicode(datetime) + unicode(int(random.uniform(100000, 999999))) #Don't change!
-
+            item['prod_id'] = int(item['prod_id'])
             item['affiliate_partner'] = "viglink"
             item['brand'] = "Harrods"
-            item['long_desc'] = response.selector.xpath('//p[@class="description"]/text()').extract()[0]
-            item['short_desc'] = response.selector.xpath('//span[@class="productname"]/text()').extract()[0].strip()
+            item['long_desc'] = unicode(response.selector.xpath('//p[@class="description"]/text()').extract()[0])
+            item['short_desc'] = unicode(response.selector.xpath('//span[@class="productname"]/text()').extract()[0].strip())
             item['product_link'] = response.selector.xpath('//head/link[@rel="canonical"]/@href').extract()[0]
 
             item['cat_1'] = ""
