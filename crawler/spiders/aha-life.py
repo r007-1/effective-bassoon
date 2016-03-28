@@ -17,7 +17,6 @@ class AHAlife(scrapy.Spider):
     for main_tag in main_tags:
         if 'product' in main_tag.findNext("loc").text:
             start_urls.append(main_tag.findNext("loc").text)
-    start_urls = start_urls[0:100]
     def parse(self, response):
         try:
             datetime = int(str(int(time.time()*100))) #Don't change!
