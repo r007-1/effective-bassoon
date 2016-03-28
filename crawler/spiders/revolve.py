@@ -95,7 +95,7 @@ class Revolve(scrapy.Spider):
         item['merchant_id']  = "HE3T6E"
         item['merchant_prod_id'] = response.selector.xpath('//input[@id="productCode"]/@value').extract()[0]
 
-        item['is_available'] = 'True' #BOOLEAN
+        item['is_available'] = 1 #BOOLEAN
         item['currency'] = "USD"
         item['currency_symbol'] = "$"
 
@@ -107,21 +107,21 @@ class Revolve(scrapy.Spider):
                 item['price_sale'] = sale
                 item['price_perc_discount'] = int(100-100*(sale/orig))
                 item['price'] = item['price_sale']
-                item['on_sale'] = 'True' #BOOLEAN
+                item['on_sale'] = 1 #BOOLEAN
             else:
                 item['price_orig'] = int(float(response.selector.xpath('//div[@class="prices prices--md block block--lg"]/span[@class="prices__retail-strikethrough"]/text()').extract()[0][1:]))
                 item['price'] = item['price_orig']
                 item['price_sale'] = ""
-                item['on_sale'] = 'False'
+                item['on_sale'] = 0
         except IndexError:
             item['price_orig'] = int(float(response.selector.xpath('//div[@class="prices prices--md block block--lg"]/span[@class="prices__retail"]/text()').extract()[0][1:]))
             item['price'] = item['price_orig']
             item['price_sale'] = ""
-            item['on_sale'] = 'False' #BOOLEAN
+            item['on_sale'] = 0 #BOOLEAN
 
         item['primary_color'] = ""
 
-        tags = [str(item['brand']), str(item['short_desc']), str(item['long_desc'])] #str(" ".join(item['mcats'])),
-        item['tags'] = " ".join(tags)
+        tags = [item['brand'], item['short_desc'], item['long_desc']] #str(" ".join(item['mcats'])),
+        item['tags'] = " ".join(tags).encode('utf-8').strip()
 
         yield item

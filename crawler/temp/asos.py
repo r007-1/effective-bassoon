@@ -22,6 +22,7 @@ class Asos(scrapy.Spider):
             prod_link = tag.findNext("loc").text
             if '?iid=' in prod_link:
                 start_urls.append(prod_link[0:prod_link.find("&mporgp")])
+    start_urls = start_urls[0:10]
     def parse(self, response):
         datetime = int(str(int(time.time()*100))) #Don't change!
         random.seed(1412112 + datetime) #Don't change!
@@ -103,6 +104,6 @@ class Asos(scrapy.Spider):
             item['price_sale'] = ""
             item['on_sale'] = 0 #BOOLEAN
         item['primary_color'] = ""
-        tags = [str(item['brand']), str(item['short_desc']), str(item['long_desc'])] #str(" ".join(item['mcats'])),
-        item['tags'] = " ".join(tags)
+        tags = [item['brand'], item['short_desc'], item['long_desc']] #str(" ".join(item['mcats'])),
+        item['tags'] = " ".join(tags).encode('utf-8').strip()
         yield item

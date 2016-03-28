@@ -13,11 +13,11 @@ class AHAlife(scrapy.Spider):
     start_urls = []
     sitemaps = []
     sitemap_main = ["http://www.ahalife.com/sitemap.xml"]
-    main_tags = bs(requests.get(sitemap_main[0]).text, "lxml").find_all("sitemap")
+    main_tags = bs(requests.get(sitemap_main[0]).text, "lxml").find_all("url")
     for main_tag in main_tags:
-        if 'product' in main_tag:
-            sitemaps.append(main_tag.findNext("loc").text)
-    start_urls = sitemaps
+        if 'product' in main_tag.findNext("loc").text:
+            start_urls.append(main_tag.findNext("loc").text)
+    start_urls = start_urls[0:10]
     def parse(self, response):
         datetime = int(str(int(time.time()*100))) #Don't change!
         random.seed(1412112 + datetime) #Don't change!
@@ -85,7 +85,7 @@ class AHAlife(scrapy.Spider):
         item['merchant_id']  = "SN4NSZ"
         item['merchant_prod_id'] = response.selector.xpath('//div[@class="shipping-info"]/ul[@class="details-sections"]/li[2]/span/text()').extract()[0]
 
-        item['is_available'] = 'True' #BOOLEAN
+        item['is_available'] = 1 #BOOLEAN
         item['currency'] = 'USD'
         item['currency_symbol'] = '$'
 
@@ -93,11 +93,12 @@ class AHAlife(scrapy.Spider):
         item['price_orig'] = int(float(response.selector.xpath('//div[@class="product-price sku-price"]/@data-base-price').extract()[0]))
         item['price'] = item['price_orig']
         item['price_sale'] = ""
-        item['on_sale'] = 'False' #BOOLEAN
+        item['on_sale'] = 0 #BOOLEAN
 
         item['primary_color'] = ""
 
-        tags = [str(item['brand']), str(item['short_desc']), str(item['long_desc'])] #str(" ".join(item['mcats'])),
-        item['tags'] = " ".join(tags)
+        tags = [item['brand'], item['short_desc'], item['long_desc']] #str(" ".join(item['mcats'])),
+        item['tags'] = " ".join(tags).encode('utf-8').strip()
+
 
         yield item

@@ -24,7 +24,7 @@ class Harrods(scrapy.Spider):
         for tag in tags:
             prod_link = tag.findNext("loc").text
             start_urls.append(prod_link)
-
+    start_utls = start_urls[0:10]
 
     def parse(self, response):
         datetime = int(str(int(time.time()*100))) #Don't change!
@@ -95,7 +95,7 @@ class Harrods(scrapy.Spider):
         item['merchant_id']  = "2GSE52"
         item['merchant_prod_id'] = response.selector.xpath('//span[@class="product_code"]/text()').extract()[0][13:]
 
-        item['is_available'] = 'True' #BOOLEAN
+        item['is_available'] = 1 #BOOLEAN
         item['currency'] = response.selector.xpath('//span[@class="country-selector_currency"]/text()').extract()[0]
         item['currency_symbol'] = response.selector.xpath('//span[@class="country-selector_currency"]/span[@class="code"]/text()').extract()[0]
 
@@ -107,22 +107,23 @@ class Harrods(scrapy.Spider):
                 item['price_sale'] = sale
                 item['price_perc_discount'] = int(100-100*(sale/orig))
                 item['price'] = item['price_sale']
-                item['on_sale'] = 'True' #BOOLEAN
+                item['on_sale'] = 1 #BOOLEAN
             else:
                 item['price_orig'] = int(float(response.selector.xpath('//span[@class="prices price"]/span[@class="was"]/text()').extract()[0][1:]))
                 item['price'] = item['price_orig']
                 item['price_sale'] = ""
-                item['on_sale'] = 'False'
+                item['on_sale'] = 0
                 
         except IndexError:
             item['price_orig'] = int(float(response.selector.xpath('//dd[@class="product-pricing__price"]/span[@itemprop="price"]/text()').extract()[0]))
             item['price'] = item['price_orig']
             item['price_sale'] = ""
-            item['on_sale'] = 'False' #BOOLEAN
+            item['on_sale'] = 0 #BOOLEAN
 
         item['primary_color'] = ""
 
-        tags = [str(item['brand']), str(item['short_desc']), str(item['long_desc'])] #str(" ".join(item['mcats'])),
-        item['tags'] = " ".join(tags)
+        tags = [item['brand'], item['short_desc'], item['long_desc']] #str(" ".join(item['mcats'])),
+        item['tags'] = " ".join(tags).encode('utf-8').strip()
+
 
         yield item

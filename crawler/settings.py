@@ -13,6 +13,9 @@ BOT_NAME = 'crawler'
 
 SPIDER_MODULES = ['crawler.spiders']
 NEWSPIDER_MODULE = 'crawler.spiders'
+DOWNLOAD_HANDLERS = {'s3': None,}
+
+
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
