@@ -38,7 +38,7 @@ django-ses==0.4.1
 django-statictastic==0.6.1
 django-storages==1.1.8
 django-toolbelt==0.0.1
-djangorestframework==3.3.3
+djangorestframework==3.11.2
 djangotoolbox==1.8.0
 djenesis==1.1.1
 docker-py==1.1.0
