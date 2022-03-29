@@ -87,7 +87,7 @@ numpy==1.10.1
 odict==1.5.1
 optional-django==0.1.0
 pandas==0.17.1
-paramiko==1.15.3
+paramiko==2.10.1
 path.py==8.1.2
 pathspec==0.3.3
 pexpect==4.0.1
