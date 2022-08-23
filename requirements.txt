@@ -75,7 +75,7 @@ mock==1.0b1
 modulegraph==0.10.4
 mongo==0.2.0
 mongoengine==0.10.6
-nbconvert==4.1.0
+nbconvert==6.5.1
 nbformat==4.0.1
 ndg-httpsclient==0.4.0
 nexmo==1.0.1
